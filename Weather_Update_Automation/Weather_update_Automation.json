@@ -1,0 +1,170 @@
+{
+  "name": "Weather Updates Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 6
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "010249fe-c4df-4984-9abf-3fefad270dbf",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://api.openweathermap.org/data/2.5/weather?q=jaipur,IN&appid=eaa546a3e392beb8f0b678a3f634c1eb&units=metric",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "4f4d716a-2682-4ffb-b6d2-7f4164aadb0b",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f6966ee9-c661-4db8-a324-022d729724d4",
+              "name": "main.temp",
+              "value": "={{ $json.main.temp }}",
+              "type": "number"
+            },
+            {
+              "id": "36352bb1-a42f-4f0b-af19-a81c2713a5b8",
+              "name": "main.feels_like",
+              "value": "={{ $json.main.feels_like }}",
+              "type": "number"
+            },
+            {
+              "id": "7f263cb0-1cc9-41af-9d19-d13852d705ee",
+              "name": "main.pressure",
+              "value": "={{ $json.main.pressure }}",
+              "type": "number"
+            },
+            {
+              "id": "93f84af2-ab39-4bdf-b652-0a4c45552412",
+              "name": "main.humidity",
+              "value": "={{ $json.main.humidity }}",
+              "type": "number"
+            },
+            {
+              "id": "8f648561-aead-40a0-a379-1da96283063d",
+              "name": "wind.speed",
+              "value": "={{ $json.wind.speed }}",
+              "type": "number"
+            },
+            {
+              "id": "42dc310e-b629-47bd-9a89-1074eff99039",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "f780c940-be1e-4500-929e-17b4bbb3d199",
+              "name": "sys.country",
+              "value": "={{ $json.sys.country }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        0
+      ],
+      "id": "d01beb9a-9458-4173-971e-2cb702127dd1",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "chatId": "6105632594",
+        "text": "=Temperature (C):{{ $json.main.temp }}\nFeels Like (C):{{ $json.main.feels_like }}\nPressure (hPa):{{ $json.main.pressure }}\nHumidity (%):{{ $json.main.humidity }}\nWind Speed (KM/H):{{ $json.wind.speed }}\nCity:{{ $json.name }}\nCountry:{{ $json.sys.country }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        624,
+        0
+      ],
+      "id": "f508f0ff-a8cc-40aa-a6ae-f9b744c32d4b",
+      "name": "Send a text message",
+      "webhookId": "ea891407-5611-4fbf-b1ed-4490923fa5e5",
+      "credentials": {
+        "telegramApi": {
+          "id": "3Pb4eRdvvbl1iLC3",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "cd9f8f8e-0d47-41cd-85e9-558be8b3f77e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9cec2652261214d7948efb4a1bf1127949d8be007f2ea57a1af7da8d3c104e25"
+  },
+  "nodeGroups": [],
+  "id": "Fq6WtQZRPD4vZQF6",
+  "tags": []
+}
