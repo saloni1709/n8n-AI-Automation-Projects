@@ -1,0 +1,269 @@
+{
+  "name": "Whatsapp Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -416,
+        80
+      ],
+      "id": "bdcd4ec7-c9f1-41f2-80cf-f8fecde09e98",
+      "name": "When chat message received",
+      "webhookId": "5e27e711-f64a-433e-a835-5fb123e64a2f"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.messages[0].text }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "b9916f94-28b8-46c3-b4e4-e452a31b21bf",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        80,
+        208
+      ],
+      "id": "511625e0-3a04-4ff3-9f36-48b9534a1be4",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "FQQ8VvtJLMjsH57h",
+          "name": "Google Gemini(PaLM) Api account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('WhatsApp Trigger').item.json.contacts[0] }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        224,
+        208
+      ],
+      "id": "7edd0802-d35e-4862-9b1a-5e87ab159f60",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1KDRwVuVSDBcRzMHskaOl0jKEd1qW_7LxAVpRRFaB7R0",
+          "mode": "list",
+          "cachedResultName": "Courses",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KDRwVuVSDBcRzMHskaOl0jKEd1qW_7LxAVpRRFaB7R0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KDRwVuVSDBcRzMHskaOl0jKEd1qW_7LxAVpRRFaB7R0/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        368,
+        208
+      ],
+      "id": "12a66bc7-2664-4132-8fb3-c5550d01dc06",
+      "name": "Courses",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "qzTiCbZRVzZCf6tg",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "16ozzH77qHEyg4vdv_iDSdqhs3HyR15QT9_TiQB4262g",
+          "mode": "list",
+          "cachedResultName": "FAQ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/16ozzH77qHEyg4vdv_iDSdqhs3HyR15QT9_TiQB4262g/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/16ozzH77qHEyg4vdv_iDSdqhs3HyR15QT9_TiQB4262g/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        480,
+        208
+      ],
+      "id": "64cd144e-b917-450a-9aed-d4fdd5b7b2e6",
+      "name": "FAQ",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "qzTiCbZRVzZCf6tg",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {}
+      },
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "2b1012b5-c14f-43ff-b169-59294ff1b23b",
+      "name": "WhatsApp Trigger",
+      "webhookId": "43db4757-0637-45cd-898c-38158ec1d9cf",
+      "credentials": {
+        "whatsAppTriggerApi": {
+          "id": "kSJR7p6aZ7phaDEO",
+          "name": "WhatsApp OAuth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "1153480484524456",
+        "recipientPhoneNumber": "+91 9875769969",
+        "textBody": "=Demo",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        608,
+        0
+      ],
+      "id": "433657b9-c11c-4774-9c7f-03f030225ddb",
+      "name": "Send message",
+      "webhookId": "64d80be2-ed18-43ca-8997-4a67baadc067",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "qVXeiWhBqmIL5eR5",
+          "name": "WhatsApp account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        []
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Courses": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FAQ": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "b7985400-adc5-4d3b-947a-8e9403ed74a5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9cec2652261214d7948efb4a1bf1127949d8be007f2ea57a1af7da8d3c104e25"
+  },
+  "nodeGroups": [],
+  "id": "MYepdhQgR0zR3jIx",
+  "tags": []
+}
